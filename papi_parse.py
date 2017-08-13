@@ -4,7 +4,6 @@ class Papils(object):
   def __init__(self):
     pass
 
-
   def parseRuleTree(self, ruletree):
     for k,v in ruletree['rules'].items():
       print(k)

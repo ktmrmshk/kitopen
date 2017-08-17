@@ -21,6 +21,12 @@ class papireq(object):
 
   def dump(self, response):
     print(response.url)
+
+    print(response.request.method)
+    for k,v in response.request.headers.items():
+      print(": ".join([k,v]))
+    #print(response.request.content)
+    print()
     print(response.status_code)
     for k,v in response.headers.items():
       print(": ".join([k,v]))

@@ -1,4 +1,4 @@
-from akacurl import papireq
+from akdumpr import papireq
 import sys
 
 def usage():

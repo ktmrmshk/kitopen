@@ -50,7 +50,7 @@ class Papils(object):
     
     if originb:
       print( ', '.join(rulename) )
-      self.rulename=', '.join(rulename).replace('default, ', '')
+      self.rulename=' > '.join(rulename).replace('default, ', '')
       for b in originb:
         self.parseOrigin(b, is_secure)
       print('-------')
@@ -66,7 +66,7 @@ class Papils(object):
       print('downloadDomainName', opt['netStorage']['downloadDomainName'] ) 
       print('cpCode', opt['netStorage']['cpCode'] )
       self.originhost='{}/{}/'.format(opt['netStorage']['downloadDomainName'], opt['netStorage']['cpCode'])
- 
+    
     elif opt['originType'] == 'CUSTOMER':
       print('hostname', opt['hostname'] )
       self.originhost=opt['hostname']
@@ -93,6 +93,8 @@ class Papils(object):
         self.pin_certs=None
     else:
       raise
+    if self.originhost=='':
+      self.originhost='-'
     return
 
   def printline(self):
@@ -138,8 +140,10 @@ class Papils(object):
         print(filepath)
         with open(filepath) as fin:
           ruletree=json.load(fin)
-        self.parseRuleTree(ruletree)
-
+        try:
+          self.parseRuleTree(ruletree)
+        except Exception as err:
+          print('ERR: ',err)
 
 def usage():
   print('usage: python3 papi_parse.py dirname')

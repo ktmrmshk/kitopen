@@ -62,7 +62,7 @@ class papiapp(object):
     return r
 
   def dump_rules(self, cid, gid, pid, ver, propname=None, filename=None):
-    r = self.pp.get('/papi/v1/properties/{}/versions/{}/rules?contractId={}&groupId={}&validateRules=false'.format(pid, ver, cid, gid))
+    r = self.pp.get('/papi/v1/properties/{}/versions/{}/rules?contractId={}&groupId={}&validateRules=true'.format(pid, ver, cid, gid))
     #self.pp.dump(r)
     
     if r.status_code!=200:

@@ -61,12 +61,16 @@ class Papils(object):
 
     rec={}
     rec['pincert']=[]
-    rec['rulename']=' > '.join(rulename).replace('default, ', '')
+    rec['rulename']=' > '.join(rulename).replace('default > ', '')
 
     rec['origintype']=opt['originType']
     if opt['originType'] == 'NET_STORAGE':
-      rec['originhost']='{}/{}/'.format(opt['netStorage']['downloadDomainName'], opt['netStorage']['cpCode'])
-    
+      try:
+        rec['originhost']='{}/{}/'.format(opt['netStorage']['downloadDomainName'], opt['netStorage']['cpCode'])
+      except Exception:
+        #rec['originhost']=''
+        pass
+
     elif opt['originType'] == 'CUSTOMER':
       rec['originhost']=opt['hostname']
       if is_secure:
@@ -124,7 +128,7 @@ class Papils(object):
       tmp_org={}
       tmp_org['rulename'] = org['rulename']
       tmp_org['origintype'] = org.get('origintype', '-')
-      tmp_org['originhost'] = org.get('origintype', '-')
+      tmp_org['originhost'] = org.get('originhost', '-')
       tmp_org['fossltype'] = org.get('fossltype', '-')
       tmp_org['fosslcn'] = org.get('fosslcn', '-')
       if org['pincert'] == []:
@@ -146,13 +150,13 @@ def walk(rootdir):
       #print(filepath)
       with open(filepath) as fin:
         ruletree=json.load(fin)
-      try:
-        p=Papils()
-        p.parseRuleTree(ruletree)
-        #print(p)
-        p.printline()
-      except Exception as err:
-        print('ERR: {} at {}'.format(err, filepath))
+      #try:
+      p=Papils()
+      p.parseRuleTree(ruletree)
+      #print(p)
+      p.printline()
+      #except Exception as err:
+      #  print('ERR: {} at {}'.format(err, filepath))
 
 
 

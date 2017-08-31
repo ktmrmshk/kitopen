@@ -85,7 +85,8 @@ class papiapp(object):
       return
 
     plist = json.loads(r.content.decode('utf-8'))
-    #print(plist)
+    ##print(plist, gid)
+    #print(len(plist['properties']['items']))
     for p in plist['properties']['items']:
       ver=int()
       if p['productionVersion'] != None:
@@ -105,10 +106,20 @@ class papiapp(object):
       if 'contractIds' in g and cid in g['contractIds']:
         gids[ g['groupId'] ] = g['groupName']
     #print(gids)
-    
     for gid in gids.keys():
       self.dump_rules_in_group(cid, gid)
 
+  def get_cnamehost(self, cid, gid, pid, ver):
+    '''
+    return: list of dp-edgehostname pair like
+    [('www.abc.com', 'www.abc.com.edgekey.net'), ('sale2.abc.com', 'www.abc.co,/edgekey,net'), ...]
+    '''
+    r = self.pp.get('/papi/v1/properties/{}/versions/{}/hostnames?contractId={}&groupId={}&validateHostnames=true'.format(pid, ver, cid, gid))
+    j=json.loads(r.content.decode('utf-8'))
+    ret=[]
+    for h in j['hostnames']['items']:
+      ret.append( (h['cnameFrom'], h['cnameTo']) )
+    return ret
 
 def usage():
   print('usage: python3 akacurl contractid credential_file')

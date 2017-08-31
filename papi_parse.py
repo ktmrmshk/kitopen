@@ -1,15 +1,32 @@
+'''
+MIT License
+
+Copyright (c) 2017 Masa Kitamura
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+'''
+
+
 import json
 import datetime
 import os
 import sys
-'''
-output:
-contract, group, property name, version, rule, origin, is_secure, origin type, origin host, FOSSLtype, CNmatch value, pincert CN,  pincert expiredate
-
-d=datetime.datetime.fromtimestamp(1613886492000/1e3)
-d.year
-'''
-
 
 class Papils(object):
   def __init__(self):
@@ -132,13 +149,10 @@ class Papils(object):
       tmp_org['fossltype'] = org.get('fossltype', '-')
       tmp_org['fosslcn'] = org.get('fosslcn', '-')
       if org['pincert'] == []:
-        print( '{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}'.format(cid, gid, pid, pname, ver, is_secure, tmp_org['rulename'], tmp_org['origintype'], tmp_org['originhost'], tmp_org['fossltype'], str_fosslcn( tmp_org['fosslcn']), '-', '-') )
+        print( '{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}'.format(cid, gid, pid, pname, ver, is_secure, tmp_org['rulename'].decode('utf-8'), tmp_org['origintype'], tmp_org['originhost'], tmp_org['fossltype'], str_fosslcn( tmp_org['fosslcn']), '-', '-') )
       else:
         for p in org['pincert']:
-          print( '{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}'.format(cid, gid, pid, pname, ver, is_secure, tmp_org['rulename'], tmp_org['origintype'], tmp_org['originhost'], tmp_org['fossltype'], str_fosslcn(tmp_org['fosslcn']), p[0], p[1]) )
-
-
-
+          print( '{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}'.format(cid, gid, pid, pname, ver, is_secure, tmp_org['rulename'].decode('utf-8'), tmp_org['origintype'], tmp_org['originhost'], tmp_org['fossltype'], str_fosslcn(tmp_org['fosslcn']), p[0], p[1]) )
 
 def walk(rootdir):
   for root, subdir, files in os.walk(rootdir):
@@ -147,28 +161,19 @@ def walk(rootdir):
       ruletree=''
       if not filepath.endswith('.json'):
         continue
-      #print(filepath)
       with open(filepath) as fin:
         ruletree=json.load(fin)
-      #try:
-      p=Papils()
-      p.parseRuleTree(ruletree)
-      #print(p)
-      p.printline()
-      #except Exception as err:
-      #  print('ERR: {} at {}'.format(err, filepath))
-
-
+      try:
+        p=Papils()
+        p.parseRuleTree(ruletree)
+        p.printline()
+      except Exception as err:
+        print('ERR: {} at {}'.format(err, filepath))
 
 def usage():
   print('usage: python3 papi_parse.py dirname')
 
 if __name__ == '__main__':
-  #p=Papils()
-  #with open(sys.argv[1]) as f:
-  #  ruletree=json.load(f)
-  #  p.parseRuleTree(ruletree)
-
   if len(sys.argv) != 2:
     print('error:')
     usage()

@@ -19,6 +19,13 @@ class papireq(object):
     response=self.s.get(req)
     return response
 
+  def post(self, req_path, body):
+    req='{}{}'.format(self.baseurl, req_path)
+    hdr={'Content-Type': 'application/json', 'PAPI-Use-Prefixes': 'false'}
+    response=self.s.post(req, data=body, headers=hdr)
+    return response
+
+
   def dump(self, response):
     print(response.url)
 

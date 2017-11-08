@@ -40,7 +40,7 @@ class akactivate(object):
         body['note']=note
         return body
     
-    def activate(self, propname, nw, ver, email, note='this is foobar'):
+    def activate(self, propname, nw, ver, email, note='activation by PAPI'):
         path=self.request_path(propname)
         body=self.request_body(ver, nw, email, note)
         body['complianceRecord'] = {'noncomplianceReason': 'NO_PRODUCTION_TRAFFIC'}
@@ -62,34 +62,30 @@ class akactivate(object):
 
     
 def test():
-    aa = akactivate('.edgerc')
-    ret = aa.activate('www.ktmrmshk.xyz', 'prod', 17, 'mkitamur@akamai.com')    
+    aa = akactivate('jal.cred')
+    ret = aa.activate('book-i.jal.co.jp', 'stg', 12, 'mkitamur@akamai.com')    
     print(ret)
     
     
     
 def main():
     def usage():
-        print('usage: python3 akpost credential_file propertyname stg/prod ver')
-        print('''ex: python3 akcmdr .edgerc space.ktmrmshk.com stg 34''')
+        print('usage: python3 akactivate credential_file propertyname stg/prod ver')
+        print('''ex: python3 akactivate .edgerc space.ktmrmshk.com stg 34''')
 
     if len(sys.argv) != 5:
         usage()
         exit()
-
-    pp = papireq(sys.argv[1])
+    
+    aa = akactivate(sys.argv[1])
     print('credential file: {}'.format(sys.argv[1]))
-
-    r=pp.post(sys.argv[2], sys.argv[3])
-    pp.dump(r)
-
-
-
-
-
+    #ret = aa.activate('book-i.jal.co.jp', 'stg', 12, 'mkitamur@akamai.com')    
+    ret = aa.activate(sys.argv[2], sys.argv[3], int(sys.argv[4]), 'mkitamur@akamai.com')
+    print(ret)
 
 if __name__ == '__main__':
-    test()
+    #test()
+    main()
 
 
 

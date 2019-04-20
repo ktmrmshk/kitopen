@@ -6,25 +6,31 @@ import sys, os.path, os
 
 
 class papireq(object):
-  def __init__(self, edgerc_file='.edgerc'):
+  def __init__(self, edgerc_file='.edgerc', section='default'):
     self.edgerc_file=edgerc_file
     self.edgerc=EdgeRc(self.edgerc_file)
-    self.baseurl='{}{}'.format('https://', self.edgerc.get('default', 'host'))
+    self.baseurl='{}{}'.format('https://', self.edgerc.get(section, 'host'))
 
     self.s = requests.Session()
     self.s.auth = EdgeGridAuth.from_edgerc(self.edgerc, 'default')
     
-  def get(self, req_path):
+  def get(self, req_path, params=None, headers=None):
     req='{}{}'.format(self.baseurl, req_path)
-    response=self.s.get(req)
+    response=self.s.get(req, params=params, headers=headers)
     return response
 
-  def post(self, req_path, body):
+  def post(self, req_path, params=None, body=None, headers=None):
     req='{}{}'.format(self.baseurl, req_path)
-    hdr={'Content-Type': 'application/json', 'PAPI-Use-Prefixes': 'false'}
-    response=self.s.post(req, data=body, headers=hdr)
+    response=self.s.post(req, json=body, headers=headers)
     return response
 
+  def put(self, req_path, params=None, body=None, headers=None):
+    req='{}{}'.format(self.baseurl, req_path)
+    response=self.s.put(req, json=body, headers=headers)
+    return response
+
+  def getjson(self, response):
+      return response.json()
 
   def dump(self, response):
     print(response.url)

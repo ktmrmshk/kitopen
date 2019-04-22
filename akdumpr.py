@@ -21,12 +21,12 @@ class papireq(object):
 
   def post(self, req_path, params=None, body=None, headers=None):
     req='{}{}'.format(self.baseurl, req_path)
-    response=self.s.post(req, json=body, headers=headers)
+    response=self.s.post(req, params=params, json=body, headers=headers)
     return response
 
   def put(self, req_path, params=None, body=None, headers=None):
     req='{}{}'.format(self.baseurl, req_path)
-    response=self.s.put(req, json=body, headers=headers)
+    response=self.s.put(req, params=params, json=body, headers=headers)
     return response
 
   def getjson(self, response):
